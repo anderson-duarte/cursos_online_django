@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block titulo %}<title>Curso</title>{% endblock %}
+{% block conteudo %}
+<div class="container-fluid">
+    <div class="jumbotron jumbotron-fluid bg-light">
+      <div class="container">
+        <h1 class="text-center">{{curso.nome}}</h1>
+        <p class="text-center">{{curso.sobre}}</p>
+          <p class="text-center"><small>Criado: {{curso.criado.date}}</small></p>
+          <p class="text-center">
+          <a href="#" class="text-center"><button type="button" class="btn btn-info">Inscreva-se</button></a>
+          </p>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="container-fluid">
+        <h2>SOBRE O CURSO</h2>
+
+        {% if curso.mostrar_imagem %}
+            <img class="rounded float-left" style="margin:15px; margin-left:0px;" src="{{curso.imagem.url}}">
+        {% else %}
+            <img class="rounded float-left" src="{% static 'cursos/image/imagem.png' %}">
+        {% endif %}
+        <p><a href="#contato" class="btn btn-blue-grey">Comente</a></p>
+        {{curso.descricao | linebreaks}}
+        <p><small>Atualizado: {{curso.modificado.date}}</small></p>
+    </div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+        <h3>Tire suas dúvidas sobre o curso</h3>
+        {% if envio %}
+        <h5>Formulário enviado com sucesso!</h5>
+        {% endif %}
+      <div class="form-wrapper">
+        <form class="form" method="post" action="#contato" id="contato">
+            {% csrf_token %}
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            {{form.as_table}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-info">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

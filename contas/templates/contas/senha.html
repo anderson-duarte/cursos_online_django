@@ -1,0 +1,26 @@
+{% extends 'contas/admin_cursos.html'%}
+{% load bootstrap4 %}
+{% block breadcrumb %}
+{{block.super}}
+<li class="breadcrumb-item"><a href="{% url 'contas:senha' %}">Alterar Senha</a></li>
+{% endblock %}
+{% block tema %}
+<h1 class="text-center">Editar Perfil</h1>
+{% endblock %}
+{% block estudante %}
+    <div class="row">
+        <div class="offset-1 col-md-7">
+            <form method="post" action="#">
+                {% csrf_token %}
+                {% if sucess %}
+                <h3 class="text-success">Senha alterada com sucesso!</h3>
+                {% endif %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-success">Alterar Senha</button>
+                    <a href="{% url 'contas:painel' %}"><button type="button" class="btn btn-danger">Cancelar</button></a>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
