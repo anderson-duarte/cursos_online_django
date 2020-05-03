@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% block titulo %}<title>Login</title>{% endblock %}
+{% block conteudo %}
+<div class="container-fluid">
+    <div class="row bg-light">
+
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 bg-white" style="margin-top:60px; margin-bottom:150px;">
+            <!-- Default form login -->
+            <form method="post" class="text-center border border-light p-5" action="{% url 'contas:novo' %}">
+                {% csrf_token %}
+                {% bootstrap_form form layout='inline' %}
+                <!-- Sign in button -->
+                {% buttons %}
+                <button class="btn btn-info btn-block my-4" type="submit">Cadastrar</button>
+                {% endbuttons %}
+            </form>
+            <!-- Default form login -->
+        </div>
+        </div>
+        <div class="col-md-">
+        </div>
+</div>
+{% endblock %}
