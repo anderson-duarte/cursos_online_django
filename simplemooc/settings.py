@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cursos',
     'contas',
     'bootstrap4',
+    'accounts',
 ]
 
 MIDDLEWARE = [

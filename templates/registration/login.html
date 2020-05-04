@@ -16,7 +16,7 @@
                 {% bootstrap_form form %}
                 <div class="text-center">
                     <!-- Forgot password -->
-                    <a class="text-center" href="#">Esqueceu a senha?</a>
+                    <a class="text-center" href="{% url 'password_reset' %}">Esqueceu a senha?</a>
                 </div>
             <!-- Sign in button -->
             <button class="btn btn-info btn-block my-4" type="submit">Entrar</button>

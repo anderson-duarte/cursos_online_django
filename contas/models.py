@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 SEXO = [
     ('M', 'Masculino'),
@@ -18,3 +19,17 @@ class Aluno(AbstractUser):
     def __str__(self):
         return self.nome
 
+
+class ResetSenha(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario', on_delete=models.CASCADE, related_name='resets')
+    key = models.CharField(verbose_name='Chave', max_length=100, unique=True)
+    criado = models.DateTimeField(auto_now_add=True, verbose_name='Criado em', )
+    confirmado = models.BooleanField(default=False, blank=True, verbose_name='Confirmado?')
+
+    def __str__(self):
+        return self.user + ' em '+ self.criado
+
+    class Meta:
+        verbose_name = 'Nova Senha'
+        verbose_name_plural = 'Novas Senhas'
+        ordering = ['-criado']

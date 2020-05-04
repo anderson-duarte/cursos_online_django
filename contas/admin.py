@@ -9,7 +9,7 @@ class AlunoAdmin(UserAdmin):
     add_form = CriarAluno
     form = EditarAluno
     model = Aluno
-    list_display = ['username', 'nome', 'escolaridade', 'profissao']
+    list_display = ['username', 'nome', 'escolaridade', 'profissao', 'email']
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': ('nome', 'escolaridade', 'profissao')}),
     )

@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import User
+
 from .models import Aluno
 
 
@@ -44,11 +46,25 @@ from .models import Aluno
 #         fields = ['username', 'password', 'email']
 
 class CriarAluno(UserCreationForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        queryset = Aluno.objects.filter(email=email)
+        if queryset.exists():
+            raise forms.ValidationError('Este email ja foi cadastrado!')
+        else:
+            return email
     class Meta(UserCreationForm):
         model = Aluno
         fields = ('nome', 'email', 'sexo', 'cpf', 'escolaridade', 'profissao', 'username')
 
 class EditarAluno(UserChangeForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        queryset = Aluno.objects.filter(email=email).exclude(pk=self.instance.pk)
+        if queryset.exists():
+            raise forms.ValidationError('Este email ja foi cadastrado!')
+        else:
+            return email
     class Meta(UserChangeForm):
         model = Aluno
         fields = ('nome', 'email', 'sexo', 'cpf', 'escolaridade', 'profissao', 'username')
