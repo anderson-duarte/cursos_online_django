@@ -1,17 +1,20 @@
-from django.db import transaction
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeForm
-from django.contrib.auth.models import User
-from .forms import CriarAluno, EditarAluno, Aluno
+from .forms import CriarAluno, EditarAluno
 # Create your views here.
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView
+#Resolveu o erro abaixo
+#Attempted relative import beyond toplevel package django project on make migrations
+from cursos.models import Curso, Inscricao
+from django.http import HttpResponse
 
 
 @login_required
 def painel(request):
-    return render(request, 'contas/admin_cursos.html')
+    cursus = Inscricao.objects.filter(user=request.user)
+    return render(request, 'contas/admin_cursos.html', {'cursos':cursus})
 
 @login_required
 def senha(request):

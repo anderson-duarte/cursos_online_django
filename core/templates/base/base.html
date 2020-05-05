@@ -24,6 +24,25 @@
 </head>
 <body>
     {% include 'base/head.html' %}
+     <div>
+        {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+				  <strong>{{message}}</strong>
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+        {% endfor %}
+<!--        <ul class="messages">-->
+<!--            {% for message in messages %}-->
+<!--            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>-->
+<!--                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}-->
+<!--                {{ message }}-->
+<!--            </li>-->
+<!--            {% endfor %}-->
+<!--        </ul>-->
+    </div>
         {% block conteudo %}
 
         {% endblock %}

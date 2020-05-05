@@ -9,7 +9,7 @@
         <p class="text-center">{{curso.sobre}}</p>
           <p class="text-center"><small>Criado: {{curso.criado.date}}</small></p>
           <p class="text-center">
-          <a href="#" class="text-center"><button type="button" class="btn btn-info">Inscreva-se</button></a>
+          <a href="{% url 'cursos:inscrever' curso.slug %}" class="text-center"><button type="button" class="btn btn-info">Inscreva-se</button></a>
           </p>
       </div>
     </div>

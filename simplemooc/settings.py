@@ -17,6 +17,7 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,7 +28,6 @@ SECRET_KEY = '_xim%v(61u(o!68^4j$$_ui=%y)6s1m4uh=*_hm_eguyh28xrv'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
@@ -34,3 +35,34 @@ class Curso(models.Model):
     class Meta:
         verbose_name = 'Curso'
         verbose_name_plural='Cursos'
+
+
+class Inscricao(models.Model):
+    STATUS_CURSO = (
+        (0, 'Pendente'),
+        (1, 'Aprovado'),
+        (2, 'Bloqueado'),
+        (3, 'Cancelado'),
+    )
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario', related_name='inscricao', on_delete=models.CASCADE)
+    curso = models.ForeignKey(Curso, verbose_name='Curso', related_name='inscricao', on_delete=models.CASCADE)
+    status = models.IntegerField(verbose_name='Situacao', choices=STATUS_CURSO, blank=True, default=1)
+
+    data_inscricao = models.DateTimeField(auto_now_add=True, verbose_name='Data de Inscricao')
+    atualizado = models.DateTimeField(auto_now=True, verbose_name='Atualizado')
+
+    def __str__(self):
+        return self.curso.nome
+
+    def ativar(self):
+        self.status = 1
+        self.save()
+
+
+    class Meta:
+        verbose_name = 'Inscrição'
+        verbose_name_plural = 'Inscrições'
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'curso'], name='unique_curso')
+        ]
