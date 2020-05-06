@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -18,17 +19,16 @@ def painel(request):
 
 @login_required
 def senha(request):
-    sucess = False
     if request.method == 'POST':
         form = PasswordChangeForm(data=request.POST, user=request.user)
         if form.is_valid():
             form.save()
-            sucess = True
             update_session_auth_hash(request, form.user)
+            messages.success(request, 'Senha atualizada com sucesso!')
 #            return redirect('/account/profile')
     else:
         form = PasswordChangeForm(request.user)
-    contexto = {'form':form, 'sucess': sucess}
+    contexto = {'form':form}
     return render(request, 'contas/senha.html', contexto)
 
 class cadastrar(CreateView):
@@ -39,14 +39,13 @@ class cadastrar(CreateView):
 
 @login_required
 def editar(request):
-    sucess = False
     if request.method == 'POST':
         form = EditarAluno(data=request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             form = EditarAluno(instance=request.user)
-            sucess = True
+            messages.success(request, 'Informações atualizadas com sucesso!')
     else:
         form = EditarAluno(instance=request.user)
-    contexto = {'form': form, 'sucess': sucess}
+    contexto = {'form': form}
     return render(request, 'contas/edit.html', contexto)

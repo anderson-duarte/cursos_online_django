@@ -8,13 +8,11 @@
 <h1 class="text-center">Editar Perfil</h1>
 {% endblock %}
 {% block estudante %}
+<br><br>
     <div class="row">
         <div class="offset-1 col-md-7">
             <form method="post" action="#">
                 {% csrf_token %}
-                {% if sucess %}
-                <h3 class="text-success">Senha alterada com sucesso!</h3>
-                {% endif %}
                 {% bootstrap_form form layout='inline'%}
                 {% buttons %}
                     <button type="submit" class="btn btn-success">Alterar Senha</button>

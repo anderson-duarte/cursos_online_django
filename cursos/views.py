@@ -41,4 +41,8 @@ def inscricao(request, slug):
         messages.info(request, 'Você ja está incrito nesse curso.')
         return redirect('contas:painel')
 
+def detalhe_curso(request, curso_id):
+    inscricao = Inscricao.objects.get(id=curso_id)
+    return render(request, 'cursos/detalhe_curso.html', {'inscrito': inscricao})
+
 
