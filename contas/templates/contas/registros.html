@@ -1,0 +1,8 @@
+<h3>Meus Cursos</h3>
+  <div class="list-group">
+	{% for inscricao in cursos %}
+    	<a href="#" class="list-group-item list-group-item-action">{{inscricao}}</a>
+	{% empty %}
+	    <p class="text-danger">Nenhum curso encontrado.</p>
+	{% endfor %}
+  </div>
