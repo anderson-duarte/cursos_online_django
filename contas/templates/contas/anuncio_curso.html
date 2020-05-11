@@ -1,0 +1,38 @@
+{% extends 'contas/admin_cursos.html'%}
+{% block titulo %}<title>Painel Aulas</title>{% endblock %}
+{% block breadcrumb %}
+{{block.super}}
+<li class="breadcrumb-item"><a href="{% url 'cursos:anuncio' curso.slug %}">Aulas Curso</a></li>
+{% endblock %}
+{% block tema %}
+<h1 class="text-center">Painel das Aulas</h1>
+{% endblock %}
+
+{% block menu_opcoes %}
+<div class="list-group">
+    <li class="list-group-item text-center">
+        <h5><b>{{curso}}</b></h5>
+    </li>
+    <a href="#" class="list-group-item list-group-item-action">
+        <i class="fas fa-video"></i>
+        Aulas e Materiais
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">
+        <i class="fas fa-info-circle"></i>
+        Informações
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">
+        <i class="fas fa-envelope"></i>
+        Anuncios
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">
+        <i class="far fa-comments"></i>
+        Forum de Dúvidas
+    </a>
+</div>
+{{block.super}}
+{% endblock %}
+
+{% block estudante %}
+
+{% endblock %}

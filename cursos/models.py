@@ -66,3 +66,22 @@ class Inscricao(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'curso'], name='unique_curso')
         ]
+
+class AnuncioCurso(models.Model):
+    curso = models.ForeignKey(Curso, verbose_name='Curso', on_delete=models.CASCADE)
+    titulo = models.CharField(verbose_name='Titulo', max_length=100)
+    conteudo = models.TextField('Conteudo')
+
+    data_inscricao = models.DateTimeField(auto_now_add=True, verbose_name='Data de Inscricao')
+    atualizado = models.DateTimeField(auto_now=True, verbose_name='Atualizado')
+
+    def __str__(self):
+        return self.titulo
+
+    class Meta:
+        verbose_name = 'Anuncio_Curso'
+        verbose_name_plural='Anuncios_Cursos'
+        ordering = ['-data_inscricao']
+
+class Comentarios(models.Model):
+    pass

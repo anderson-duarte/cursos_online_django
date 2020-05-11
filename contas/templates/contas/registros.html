@@ -1,11 +1,14 @@
-<h3>Cursos</h3>
-  <div class="list-group">
+
+<div class="list-group">
+    <h3 class="list-group-item">
+        Cursos
+    </h3>
 	{% for inscricao in cursos %}
-    	<a href="{% url 'cursos:detalhe' inscricao.id %}" class="list-group-item list-group-item-action">
-			<i class="fas fa-book"></i>
-			{{inscricao}}
-		</a>
+				<a class="list-group-item list-group-item-action" href="{% url 'cursos:detalhe' inscricao.curso.slug %}">
+				<span class="fa fa-book">&nbsp;</span>
+				{{inscricao.curso.nome | slice:":35"}}
+				</a>
 	{% empty %}
 	    <p class="text-danger">Nenhum curso encontrado.</p>
 	{% endfor %}
-  </div>
+</div>

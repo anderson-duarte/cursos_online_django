@@ -41,8 +41,24 @@ def inscricao(request, slug):
         messages.info(request, 'Você ja está incrito nesse curso.')
         return redirect('contas:painel')
 
-def detalhe_curso(request, curso_id):
-    inscricao = Inscricao.objects.get(id=curso_id)
-    return render(request, 'cursos/detalhe_curso.html', {'inscrito': inscricao})
+@login_required
+def detalhe_curso(request, slug):
+    curso = get_object_or_404(Curso, slug=slug)
+    return render(request, 'cursos/detalhe_curso.html', {'inscrito': curso})
 
+@login_required
+def anuncio_curso(request, slug):
+    curso = get_object_or_404(Curso, slug=slug)
+    return render(request, 'contas/anuncio_curso.html', {'curso':curso, 'slug': slug})
+
+@login_required
+def cancelar_curso(request, id_curso):
+    curso = get_object_or_404(Curso, id=id_curso)
+    inscricao = get_object_or_404(Inscricao, user=request.user, curso=curso)
+    if request.method == 'POST':
+        inscricao.delete()
+        messages.warning(request, 'Você cancelou a inscrição do curso {}!'.format(curso.nome))
+        return redirect('contas:painel')
+
+    return render(request, 'contas/cancelar_curso.html', {'curso':curso, 'inscricao':inscricao})
 

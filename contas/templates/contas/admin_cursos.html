@@ -18,9 +18,10 @@
 			<div class="col-md-4">
 			<!--team-1-->
 			<div class="col-sm-12">
+				{% block menu_opcoes %}
                 {% inscricoes user %}
-			<h3>Configurações de Conta</h3>
 			  <div class="list-group">
+                <h3 class="list-group-item">Configurações de Conta</h3>
 				<a href="{% url 'contas:editar'%}" class="list-group-item list-group-item-action">
                     <i class="fas fa-user-edit"></i>
                     Editar Informações
@@ -34,14 +35,13 @@
                     Editar Cursos
                 </a>
 			  </div>
+				{% endblock %}
 			</div>
 			</div>
 			<!--team-2-->
 			<div class="col-md-8">
 				{% block estudante %}
-                    <div class="container">
 
-                    </div>
 				{% endblock %}
 			</div>
 		</div>

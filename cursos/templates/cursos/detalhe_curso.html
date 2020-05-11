@@ -3,23 +3,48 @@
     <br><br>
     <div class="container">
         <div class="row">
-        <div class="offset-1 col-md-10">
        <!--Panel-->
         <div class="card">
             <div class=" card-header light-color">
                 <h3><b>{{inscrito}}</b></h3>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Iniciado em: {{inscrito.curso.criado.date}}</h5>
-                <h4 class="card-text">{{inscrito.curso.descricao |linebreaks | slice:":500"}}</h4>
+                <h5 class="card-title">Iniciado em: {{inscrito.criado.date}}</h5>
+                <h4 class="card-text">{{inscrito.descricao |linebreaks | slice:":500"}}</h4>
             </div>
             <div class="card-footer text-muted light-color">
-                <a href="#" class="btn btn-info btn-sm">Acessar</a>
-                <button type="button" class="btn btn-danger btn-sm">Cancelar</button>
+                <a href="{% url 'cursos:anuncio' inscrito.slug %}" class="btn btn-info btn-sm">Acessar</a>
+	<!-- Button HTML (to Trigger Modal) -->
+	<a href="#myModal" class="btn btn-danger btn-sm" data-toggle="modal">Cancelar</a>
+
+<!-- Modal HTML -->
+<div id="myModal" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="icon-box">
+					<i class="material-icons">&#xE5CD;</i>
+				</div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+            <h4 class="modal-title">Excluir Curso?</h4>
+			<div class="modal-body">
+				<h5>Deseja realmente excluir o curso</h5><br>
+                <h6>{{inscrito}}?</h6>
+			</div>
+			<div class="modal-footer">
+                <form method="post" action="{% url 'cursos:deletar_curso' inscrito.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Deletar</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>
             </div>
         </div>
         <!--/.Panel-->
-        </div>
         </div>
     </div>
 {% endblock %}
