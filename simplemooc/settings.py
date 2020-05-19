@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'simplemooc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',
+        'NAME': 'aws',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on

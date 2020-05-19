@@ -3,6 +3,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from core.mail import send_mail_temmplate
 
+from .models import Comentarios
+
 class ContatoCurso(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)
     e_mail = forms.EmailField(label='E-mail')
@@ -21,3 +23,7 @@ class ContatoCurso(forms.Form):
         send_mail_temmplate(subject,template_name,context, [settings.CONTACT_EMAIL])
 
 
+class ComentariosForm(forms.ModelForm):
+    class Meta:
+        model = Comentarios
+        fields = ['comentario']

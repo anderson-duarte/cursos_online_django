@@ -34,5 +34,25 @@
 {% endblock %}
 
 {% block estudante %}
-
+<div class="container">
+    {% if anuncios %}
+    {% for anuncio in anuncios %}
+    <a href="{% url 'cursos:mostrar_aula' curso.slug anuncio.pk %}">
+    <h3 class="title text-center">{{anuncio.titulo}}</h3>
+    </a>
+    {{anuncio.conteudo | linebreaks|slice:":600"}} <a href="{% url 'cursos:mostrar_aula' curso.slug anuncio.pk %}" type="button" class="btn btn-sm btn-info">Continuar...</a>
+    <div class="coments">
+        <a href="{% url 'cursos:mostrar_aula' curso.slug anuncio.pk %}">
+        {% with contar=anuncio.comentarios.count %}
+        <i class="far fa-comments"></i>
+        {{contar}}
+        Comentário{{contar | pluralize}}
+        {% endwith %}
+        </a>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-danger">Não a anuncios sobre o curso.</p>
+    {% endif %}
+</div>
 {% endblock %}

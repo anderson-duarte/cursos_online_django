@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Curso, Inscricao
-from .forms import ContatoCurso
+from .models import Curso, Inscricao, AnuncioCurso
+from .forms import ContatoCurso, ComentariosForm
 
 
 def cursos(request):
@@ -49,7 +49,13 @@ def detalhe_curso(request, slug):
 @login_required
 def anuncio_curso(request, slug):
     curso = get_object_or_404(Curso, slug=slug)
-    return render(request, 'contas/anuncio_curso.html', {'curso':curso, 'slug': slug})
+    inscricao=''
+    if not request.user.is_staff:
+        inscricao = get_object_or_404(Inscricao, user=request.user, curso=curso)
+        if not inscricao.aprovado():
+            messages.error(request, 'Sua inscrição esta pendente')
+            return redirect('contas:painel')
+    return render(request, 'cursos/anuncio_curso.html', {'curso':curso, 'anuncios': curso.usuario_anuncios.all()})
 
 @login_required
 def cancelar_curso(request, id_curso):
@@ -61,4 +67,25 @@ def cancelar_curso(request, id_curso):
         return redirect('contas:painel')
 
     return render(request, 'contas/cancelar_curso.html', {'curso':curso, 'inscricao':inscricao})
+
+@login_required
+def comentarios(request, slug, pk):
+    curso1 = get_object_or_404(Curso, slug=slug)
+    inscricao=''
+    if not request.user.is_staff:
+        inscricao = get_object_or_404(Inscricao, user=request.user, curso=curso1)
+        if not inscricao.aprovado():
+            messages.error(request, 'Sua inscrição esta pendente')
+            return redirect('cursos:anuncio')
+    comentario = get_object_or_404(curso1.usuario_anuncios.all(), pk=pk)
+    form = ComentariosForm(request.POST or None)
+    if form.is_valid():
+        coment = form.save(commit=False)
+        coment.user = request.user
+        coment.anuncio_curso = get_object_or_404(AnuncioCurso, curso=curso1)
+        coment.save()
+        form = ComentariosForm()
+        messages.success(request, 'Comentário enviado com sucesso')
+    contexto = {'curso':curso1, 'comentario':comentario, 'form': form}
+    return render(request, 'cursos/mostrar_aula.html', contexto)
 

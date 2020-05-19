@@ -1,0 +1,60 @@
+{% extends 'cursos/anuncio_curso.html'%}
+{% load static %}
+{% load bootstrap4 %}
+{% block titulo %}<title>{{curso.titulo}}</title>{% endblock %}
+{% block estudante %}
+<div class="container">
+    <h3 class="title text-center">{{comentario.titulo}}</h3>
+
+    {{comentario.conteudo | linebreaks}}
+    <div class="row">
+        <div class="col-md-6">
+
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center mt-100 mb-100">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h4 class="card-title">Comentários</h4>
+            </div>
+            <div class="form">
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form layout='inline' %}
+                    {% buttons %}
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                    {% endbuttons %}
+                </form>
+            </div>
+            <hr>
+            <div class="comment-widgets">
+                {% for coment in comentario.comentarios.all %}
+                <div class="d-flex flex-row comment-row">
+                    <div class="p-2"><img src="{% static 'cursos/image/user.png' %}" alt="user" width="50" class="rounded-circle"></div>
+                    <div class="comment-text w-100">
+                        <h6 class="font-medium">{{coment.user}}</h6>
+                        <span class="m-b-15 d-block">{{coment.comentario | linebreaks}} </span>
+                        <div class="comment-footer">
+                            <span class="text-muted float-right">Comentário escrito à {{coment.data_inscricao | timesince}} atrás.</span></div>
+                    </div>
+                </div>
+                <hr>
+                {% empty %}
+                <p>Nenhum comentário.</p>
+                {% endfor %}
+            </div> <!-- Card -->
+        </div>
+    </div>
+</div>
+<!--    <div class="coments">-->
+<!--        <a href="#">-->
+<!--        {% with contar=anuncio.comentarios.count %}-->
+<!--        <i class="far fa-comments"></i>-->
+<!--        {{contar}}-->
+<!--        Comentário{{contar | pluralize}}-->
+<!--        {% endwith %}-->
+<!--        </a>-->
+<!--    </div>-->
+</div>
+{% endblock %}
