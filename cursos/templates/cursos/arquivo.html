@@ -1,0 +1,19 @@
+{% extends 'cursos/licoes.html'%}
+{% load static %}
+{% load bootstrap4 %}
+{% block titulo %}<title>{{material}}</title>{% endblock %}
+{% block breadcrumb %}
+{{block.super}}
+<li class="breadcrumb-item"><a href="{% url 'cursos:licao' curso.slug licao.pk %}">{{licao}}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'cursos:arquivos' curso.slug material.pk %}">{{material}}</a></li>
+{% endblock %}
+{% block tema %}
+<h1 class="text-center">Video Aula</h1>
+{% endblock %}
+{% block estudante %}
+<div class="container">
+    <div class="row">
+        {{material.midia|safe}}
+    </div>
+</div>
+{% endblock %}

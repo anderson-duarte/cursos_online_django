@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Curso, Inscricao, AnuncioCurso
+from .models import Curso, Inscricao, AnuncioCurso, Licao, Material
 from .forms import ContatoCurso, ComentariosForm
+from .decorators import incricao_requerida
 
 
 def cursos(request):
@@ -42,19 +43,15 @@ def inscricao(request, slug):
         return redirect('contas:painel')
 
 @login_required
+@incricao_requerida
 def detalhe_curso(request, slug):
-    curso = get_object_or_404(Curso, slug=slug)
+    curso = request.curso
     return render(request, 'cursos/detalhe_curso.html', {'inscrito': curso})
 
 @login_required
+@incricao_requerida
 def anuncio_curso(request, slug):
-    curso = get_object_or_404(Curso, slug=slug)
-    inscricao=''
-    if not request.user.is_staff:
-        inscricao = get_object_or_404(Inscricao, user=request.user, curso=curso)
-        if not inscricao.aprovado():
-            messages.error(request, 'Sua inscrição esta pendente')
-            return redirect('contas:painel')
+    curso = request.curso
     return render(request, 'cursos/anuncio_curso.html', {'curso':curso, 'anuncios': curso.usuario_anuncios.all()})
 
 @login_required
@@ -69,14 +66,9 @@ def cancelar_curso(request, id_curso):
     return render(request, 'contas/cancelar_curso.html', {'curso':curso, 'inscricao':inscricao})
 
 @login_required
+@incricao_requerida
 def comentarios(request, slug, pk):
-    curso1 = get_object_or_404(Curso, slug=slug)
-    inscricao=''
-    if not request.user.is_staff:
-        inscricao = get_object_or_404(Inscricao, user=request.user, curso=curso1)
-        if not inscricao.aprovado():
-            messages.error(request, 'Sua inscrição esta pendente')
-            return redirect('cursos:anuncio')
+    curso1 = request.curso
     comentario = get_object_or_404(curso1.usuario_anuncios.all(), pk=pk)
     form = ComentariosForm(request.POST or None)
     if form.is_valid():
@@ -89,3 +81,50 @@ def comentarios(request, slug, pk):
     contexto = {'curso':curso1, 'comentario':comentario, 'form': form}
     return render(request, 'cursos/mostrar_aula.html', contexto)
 
+@login_required
+@incricao_requerida
+def licoes(request, slug):
+    curso = request.curso
+    return render(request, 'cursos/licoes.html', {'curso':curso})
+
+@login_required
+@incricao_requerida
+def licoes(request, slug):
+    curso=request.curso
+    licoes = curso.licoes_disponiveis()
+    if request.user.is_staff:
+        licoes = curso.licoes.all()
+    contexto = {
+        'curso': curso,
+        'licoes': licoes
+    }
+    return render(request, 'cursos/licoes.html', contexto)
+
+@login_required
+@incricao_requerida
+def licao(request, slug, pk):
+    curso=request.curso
+    licao = get_object_or_404(Licao, pk=pk, curso=curso)
+    material = Material.objects.filter(licao=licao)
+
+    if not request.user.is_staff and not licao.esta_disponivel():
+        messages.error(request, 'Aula Indisponivel')
+        return redirect('cursos:licoes', slug=curso.slug)
+
+    contexto = {'curso': curso, 'licao': licao, 'material':material}
+    return render(request, 'cursos/licao.html', contexto)
+
+@login_required
+@incricao_requerida
+def material(request, slug, pk):
+    curso = request.curso
+    material = get_object_or_404(Material, pk=pk, licao__curso=curso)
+    licao = material.licao
+
+    if not request.user.is_staff and not licao.esta_disponivel():
+        messages.error(request, 'Material Indisponivel')
+        return redirect('cursos:licao', slug=curso.slug, pk=licao.pk)
+    if not material.is_midia():
+        return redirect(material.arquivo.url)
+    contexto ={'curso' : curso, 'licao':licao, 'material':material}
+    return render(request, 'cursos/arquivo.html', contexto)

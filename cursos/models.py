@@ -4,7 +4,7 @@ from core.mail import send_mail_temmplate
 from django.shortcuts import render, get_object_or_404
 
 # Create your models here.
-
+from django.utils import timezone
 
 
 class CursoManager(models.Manager):
@@ -32,11 +32,58 @@ class Curso(models.Model):
         else:
             return True
 
+    def licoes_disponiveis(self):
+        hoje = timezone.now().date()
+        return self.licoes.filter(data_disponibilizacao__gte=hoje)
+
+
     objects = CursoManager()
 
     class Meta:
         verbose_name = 'Curso'
         verbose_name_plural='Cursos'
+
+
+class Licao(models.Model):
+    nome = models.CharField(verbose_name='Nome', max_length=100)
+    descricao = models.TextField(verbose_name='Descrição', blank=True)
+    numero = models.IntegerField(verbose_name='Numero da aula', blank=True, default=0)
+    data_disponibilizacao = models.DateField(verbose_name='Data disponibilização', blank=True, null=True)
+
+    curso = models.ForeignKey(Curso, verbose_name='Curso', on_delete=models.CASCADE, related_name='licoes')
+    data_licao = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado = models.DateTimeField(auto_now=True, verbose_name='Atualizado')
+
+    def __str__(self):
+        return self.nome
+
+    def esta_disponivel(self):
+        if self.data_disponibilizacao:
+            hoje = timezone.now().date()
+            return self.data_disponibilizacao >= hoje
+        return False
+
+    class Meta:
+        verbose_name = 'Aula'
+        verbose_name_plural='Aulas'
+        ordering = ['numero']
+
+class Material(models.Model):
+    nome = models.CharField(verbose_name='Nome', max_length=100)
+    midia = models.TextField(verbose_name='Midia', blank=True)
+    arquivo = models.FileField(verbose_name='Arquivo', blank=True, upload_to='material/licao', null=True)
+
+    licao = models.ForeignKey(Licao, verbose_name='Licao', on_delete=models.CASCADE, related_name='materiais')
+
+    def is_midia(self):
+        return bool(self.midia)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        verbose_name = 'Material'
+        verbose_name_plural='Materiais'
 
 
 class Inscricao(models.Model):
@@ -105,23 +152,7 @@ class Comentarios(models.Model):
         ordering = ['-data_inscricao']
 
 
-class Licao(models.Model):
-    nome = models.CharField(verbose_name='Nome', max_length=100)
-    descricao = models.TextField(verbose_name='Descrição', blank=True)
-    numero = models.PositiveIntegerField(verbose_name='Numero da aula', blank=True)
-    data_disponibilizacao = models.DateField(verbose_name='Data disponibilização', blank=True, null=True)
 
-    curso = models.ForeignKey(Curso, verbose_name='Curso', on_delete=models.CASCADE)
-    data_inscricao = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
-    atualizado = models.DateTimeField(auto_now=True, verbose_name='Atualizado')
-
-    def __str__(self):
-        return self.nome
-
-    class Meta:
-        verbose_name = 'Aula'
-        verbose_name_plural='Aulas'
-        ordering = ['numero']
 
 
 # def post_save_inscricao(instance, created, ** kwargs):

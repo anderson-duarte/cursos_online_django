@@ -2,6 +2,10 @@
 {% load static %}
 {% load bootstrap4 %}
 {% block titulo %}<title>{{curso.titulo}}</title>{% endblock %}
+{% block breadcrumb %}
+{{block.super}}
+<li class="breadcrumb-item"><a href="{% url 'cursos:mostrar_aula' curso.slug curso.id %}">Anuncio</a></li>
+{% endblock %}
 {% block estudante %}
 <div class="container">
     <h3 class="title text-center">{{comentario.titulo}}</h3>

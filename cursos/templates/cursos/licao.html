@@ -1,0 +1,64 @@
+{% extends 'cursos/licoes.html'%}
+{% load static %}
+{% load bootstrap4 %}
+{% block titulo %}<title>{{curso}}</title>{% endblock %}
+{% block breadcrumb %}
+{{block.super}}
+<li class="breadcrumb-item"><a href="{% url 'cursos:licao' curso.slug licao.pk %}">{{licao}}</a></li>
+{% endblock %}
+{% block tema %}
+<h1 class="text-center">Aulas</h1>
+{% endblock %}
+{% block estudante %}
+<div class="container">
+    <div class="row">
+        <div class="card card-cascade wider reverse">
+            <div class="card-body card-body-cascade text-center">
+
+                <h4 class="card-title"><strong>{{licao}}</strong></h4>
+                <p class="card-text">
+                    {{licao.descricao}}
+                </p>
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Material</th>
+                        <th scope="col">Ação</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for material in licao.materiais.all %}
+                    {% if material.is_midia %}
+                    <tr>
+                        <th scope="row">Video</th>
+                        <td>{{material}}</td>
+                        <td><a href="{% url 'cursos:arquivos' curso.slug material.pk %}" class="text-info"><i class="fas fa-video"></i></a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <th scope="row">Documento</th>
+                        <td>{{material}}</td>
+                        <td><a target="_blank" href="{{material.arquivo.url}}" class="text-danger"><i class="fas fa-file-pdf"></i></a></td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}
+                    <p class="text-danger">Nenhum material de estudo encontrado</p>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<!--    <div class="coments">-->
+<!--        <a href="#">-->
+<!--        {% with contar=anuncio.comentarios.count %}-->
+<!--        <i class="far fa-comments"></i>-->
+<!--        {{contar}}-->
+<!--        Comentário{{contar | pluralize}}-->
+<!--        {% endwith %}-->
+<!--        </a>-->
+<!--    </div>-->
+    <!-- Card -->
+</div>
+{% endblock %}
